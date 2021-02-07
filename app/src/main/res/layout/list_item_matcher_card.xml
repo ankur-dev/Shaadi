@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="item"
+            type="com.shaadi.assigenment.data.model.ResultsItem" />
+
+        <variable
+            name="viewModel"
+            type="com.shaadi.assigenment.ui.viewModel.MatchCardViewModel" />
+
+        <import type="android.view.View"/>
+    </data>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_10dp"
+        android:layout_marginTop="@dimen/_5dp"
+        android:layout_marginEnd="@dimen/_10dp"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="@dimen/_10dp"
+        app:cardUseCompatPadding="true"
+        android:paddingBottom="@dimen/_5dp"
+        android:paddingTop="@dimen/_5dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_20dp">
+
+            <com.shaadi.assigenment.views.CircleImageView
+                android:id="@+id/imgProfileImage"
+                imageUrl='@{item.picture.large??""}'
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvUserName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_10dp"
+                android:gravity="center"
+                android:text='@{String.format("%s %s (%s)",item.name.first??"",item.name.last??"",item.dob.getAgeAsString())}'
+                android:textColor="@color/blue_color"
+                android:textSize="@dimen/_16sp"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgProfileImage" />
+
+
+            <TextView
+                android:id="@+id/tvUserDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4dp"
+                android:gravity="center"
+                android:paddingStart="@dimen/_10dp"
+                android:paddingEnd="@dimen/_10dp"
+                android:text='@{String.format("%s, %s",item.location.city??"",item.location.country??"")}'
+                android:textColor="@color/colorBlack_403F3F"
+                android:textSize="@dimen/_13sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
+
+            <ImageView
+                android:id="@+id/imgDecline"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserDetail"
+                android:layout_marginTop="@dimen/_20dp"
+                android:layout_marginStart="@dimen/_45dp"
+                android:src="@drawable/ic_clear"
+                android:padding="@dimen/_5dp"
+                android:background="@drawable/circle"
+                app:tint="@color/red"
+                android:elevation="@dimen/_5dp"
+                android:onClick='@{()->viewModel.updateData(@string/decline,item.email)}'
+                android:visibility='@{safeUnbox(item.isActionTaken)?View.GONE:View.VISIBLE}'
+                android:contentDescription="@string/decline"/>
+            <TextView
+                android:id="@+id/tvDecline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgDecline"
+                android:layout_marginStart="@dimen/_45dp"
+                android:text="@string/decline"
+                android:textStyle="bold"
+                android:textSize="@dimen/_13sp"
+                android:textColor="@color/colorBlack_1e1e1e"
+                android:onClick='@{()->viewModel.updateData(@string/decline,item.email)}'
+                android:visibility='@{safeUnbox(item.isActionTaken)?View.GONE:View.VISIBLE}'
+                />
+
+
+            <TextView
+                android:id="@+id/tvStatus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserDetail"
+                android:layout_marginTop="@dimen/_20dp"
+                android:textSize="@dimen/_16sp"
+                android:gravity="center_horizontal"
+                android:text='@{String.format("%s %s","Member ",item.actionName)}'
+                android:textColor='@{item.actionName.equals(@string/accept)?@color/green:@color/red}'
+                android:visibility='@{safeUnbox(item.isActionTaken)?View.VISIBLE:View.GONE}'
+                />
+
+            <ImageView
+                android:id="@+id/imgAccept"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvUserDetail"
+                android:layout_marginTop="@dimen/_20dp"
+                android:layout_marginEnd="@dimen/_45dp"
+                android:src="@drawable/ic_done"
+                android:padding="@dimen/_5dp"
+                android:elevation="@dimen/_5dp"
+                android:background="@drawable/circle"
+                app:tint="@color/green"
+                android:onClick='@{()->viewModel.updateData(@string/accept,item.email)}'
+                android:contentDescription="@string/accept"
+                android:visibility='@{safeUnbox(item.isActionTaken)?View.GONE:View.VISIBLE}'
+                />
+
+            <TextView
+                android:id="@+id/tvAccept"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imgAccept"
+                android:layout_marginEnd="@dimen/_45dp"
+                android:layout_marginStart="@dimen/_45dp"
+                android:text="@string/accept"
+                android:textStyle="bold"
+                android:textSize="@dimen/_13sp"
+                android:onClick='@{()->viewModel.updateData(@string/accept,item.email)}'
+                android:textColor="@color/colorBlack_1e1e1e"
+                android:visibility='@{safeUnbox(item.isActionTaken)?View.GONE:View.VISIBLE}'
+                />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+</layout>
